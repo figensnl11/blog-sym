@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface
+class User implements UserInterface, \Serializable
 {
     /**
      * @ORM\Id()
@@ -18,17 +18,17 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=100, unique=true)
      */
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=100)
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255,unique=true)
+     * @ORM\Column(type="string", length=100,unique=true)
      */
     private $email;
 
@@ -73,26 +73,12 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * Returns the roles granted to the user.
-     *
-     * <code>
-     * public function getRoles()
-     * {
-     *     return array('ROLE_USER');
-     * }
-     * </code>
-     *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
-     *
-     * @return (Role|string)[] The user roles
-     */
-    public function getRoles()
-    {
-        return['ROLE_USER'];
-    }
+
+      public function getRoles()
+      {
+          return array('ROLE_USER');
+     }
+
 
     /**
      * Returns the salt that was originally used to encode the password.
@@ -116,4 +102,22 @@ class User implements UserInterface
     {
         // TODO: Implement eraseCredentials() method.
     }
+
+    public function serialize()
+    {
+        return $this->serialize([
+            $this->id,
+            $this->username,
+            $this->email,
+            $this->password
+
+
+        ] );
+    }
+    public function unserialize($serialized)
+    {
+        // TODO: Implement unserialize() method.
+    }
+
+
 }
